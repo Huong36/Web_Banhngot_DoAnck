@@ -1,4 +1,4 @@
-# Web Bán Bánh Ngọt (Project Cá Nhân)
+# Web Bán Bánh Ngọt
 
 Đây là mã nguồn dự án Website Bán Bánh Ngọt (xây dựng bằng ASP.NET MVC). Dự án được tạo ra phục vụ cho mục đích thực hành các kỹ năng Kiểm thử phần mềm (Manual & Automation Test) cũng như tìm hiểu quy trình xây dựng web E-commerce cơ bản.
 
