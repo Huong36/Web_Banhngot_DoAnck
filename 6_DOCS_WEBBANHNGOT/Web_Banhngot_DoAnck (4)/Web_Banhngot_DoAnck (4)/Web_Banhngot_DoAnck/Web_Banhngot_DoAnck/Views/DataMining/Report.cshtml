@@ -1,0 +1,259 @@
+﻿@{
+    ViewBag.Title = "Báo cáo Phân tích Khai phá Dữ liệu";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    .stat-card.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+    .stat-card.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .stat-card.blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .stat-card h3 { font-size: 2.5rem; font-weight: bold; margin: 10px 0 5px 0; }
+    .stat-card p { margin: 0; font-size: 0.95rem; opacity: 0.9; }
+
+    .section-title {
+        border-left: 4px solid var(--accent-color);
+        padding-left: 12px;
+        margin: 30px 0 15px 0;
+        font-weight: bold;
+    }
+
+    .conf-bar {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .conf-bar .label { width: 120px; font-weight: 600; font-size: 0.9rem; }
+    .conf-bar .bar-bg {
+        flex: 1;
+        background-color: #eee;
+        border-radius: 5px;
+        height: 28px;
+        overflow: hidden;
+    }
+    .conf-bar .bar-fill {
+        height: 100%;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.85rem;
+        transition: width 0.5s;
+    }
+    .theory-box {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .formula {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-family: 'Courier New', monospace;
+        font-size: 1.05rem;
+        margin: 10px 0;
+        text-align: center;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="fas fa-chart-bar"></i> Báo cáo Phân tích Khai phá Dữ liệu</h2>
+        <a href="@Url.Action("Index", "DataMining")" class="btn btn-outline-dark">
+            <i class="fas fa-arrow-left"></i> Quay lại Dashboard
+        </a>
+    </div>
+
+    <!-- I. Cơ sở lý thuyết -->
+    <h4 class="section-title">I. Cơ sở Lý thuyết - Thuật toán Apriori</h4>
+
+    <div class="theory-box">
+        <h5><i class="fas fa-book"></i> Giới thiệu thuật toán Apriori</h5>
+        <p>
+            Thuật toán <strong>Apriori</strong> (Agrawal & Srikant, 1994) là một trong những thuật toán kinh điển nhất
+            trong lĩnh vực <em>Khai phá dữ liệu</em> (Data Mining), được sử dụng để tìm ra các <strong>Tập mục phổ biến</strong>
+            (Frequent Itemsets) và sinh ra các <strong>Luật kết hợp</strong> (Association Rules) từ cơ sở dữ liệu giao dịch.
+        </p>
+        <p>
+            Ý tưởng chính: <em>"Mọi tập con của một tập phổ biến cũng phải là tập phổ biến."</em>
+            Thuật toán hoạt động theo phương pháp duyệt từng mức (Level-wise), bắt đầu từ tập 1 phần tử,
+            sau đó mở rộng dần lên 2, 3... phần tử, loại bỏ sớm các tập không đạt ngưỡng hỗ trợ.
+        </p>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <h6><strong>Độ hỗ trợ (Support)</strong></h6>
+                <p>Tần suất xuất hiện đồng thời của tập mục trong tổng số giao dịch.</p>
+                <div class="formula">
+                    Support(A → B) = P(A ∪ B) = Count(A ∪ B) / N
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6><strong>Độ tin cậy (Confidence)</strong></h6>
+                <p>Xác suất mua B khi đã mua A.</p>
+                <div class="formula">
+                    Confidence(A → B) = P(B|A) = Support(A ∪ B) / Support(A)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- II. Tổng quan dữ liệu -->
+    <h4 class="section-title">II. Tổng quan Dữ liệu Thực nghiệm</h4>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-box-open fa-2x"></i>
+                <h3>@ViewBag.TotalProducts</h3>
+                <p>Sản phẩm</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card green">
+                <i class="fas fa-shopping-bag fa-2x"></i>
+                <h3>@ViewBag.TotalOrders</h3>
+                <p>Đơn hàng</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card orange">
+                <i class="fas fa-project-diagram fa-2x"></i>
+                <h3>@ViewBag.TotalRules</h3>
+                <p>Luật kết hợp</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card blue">
+                <i class="fas fa-percentage fa-2x"></i>
+                <h3>@string.Format("{0:P1}", (double)ViewBag.AvgConfidence)</h3>
+                <p>Confidence TB</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- III. Kết quả thống kê -->
+    <h4 class="section-title">III. Kết quả Phân tích Mô hình</h4>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header"><strong><i class="fas fa-chart-pie"></i> Thống kê Confidence</strong></div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr><td>Confidence cao nhất:</td><td><strong>@string.Format("{0:P2}", (double)ViewBag.MaxConfidence)</strong></td></tr>
+                        <tr><td>Confidence trung bình:</td><td><strong>@string.Format("{0:P2}", (double)ViewBag.AvgConfidence)</strong></td></tr>
+                        <tr><td>Confidence thấp nhất:</td><td><strong>@string.Format("{0:P2}", (double)ViewBag.MinConfidence)</strong></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header"><strong><i class="fas fa-chart-area"></i> Thống kê Support</strong></div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr><td>Support cao nhất:</td><td><strong>@string.Format("{0:P4}", (double)ViewBag.MaxSupport)</strong></td></tr>
+                        <tr><td>Support trung bình:</td><td><strong>@string.Format("{0:P4}", (double)ViewBag.AvgSupport)</strong></td></tr>
+                        <tr><td>Tổng số luật sinh ra:</td><td><strong>@ViewBag.TotalRules</strong></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ phân bổ Confidence -->
+    <h4 class="section-title">IV. Phân bổ Confidence theo Khoảng</h4>
+
+    @{
+        int total = (int)ViewBag.TotalRules;
+        int c30 = (int)ViewBag.Conf30_50;
+        int c50 = (int)ViewBag.Conf50_70;
+        int c70 = (int)ViewBag.Conf70_90;
+        int c90 = (int)ViewBag.Conf90_100;
+        double maxVal = new int[] { c30, c50, c70, c90, 1 }.Max();
+    }
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="conf-bar">
+                <span class="label">30% - 50%</span>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: @string.Format("{0:0}%", (c30 / maxVal) * 100); background-color: #42A5F5;">
+                        @c30 luật
+                    </div>
+                </div>
+            </div>
+            <div class="conf-bar">
+                <span class="label">50% - 70%</span>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: @string.Format("{0:0}%", (c50 / maxVal) * 100); background-color: #66BB6A;">
+                        @c50 luật
+                    </div>
+                </div>
+            </div>
+            <div class="conf-bar">
+                <span class="label">70% - 90%</span>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: @string.Format("{0:0}%", (c70 / maxVal) * 100); background-color: #FFA726;">
+                        @c70 luật
+                    </div>
+                </div>
+            </div>
+            <div class="conf-bar">
+                <span class="label">90% - 100%</span>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: @string.Format("{0:0}%", (c90 / maxVal) * 100); background-color: #EF5350;">
+                        @c90 luật
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- V. Nhận xét và Kết luận -->
+    <h4 class="section-title">V. Nhận xét và Kết luận</h4>
+
+    <div class="theory-box">
+        <h5><i class="fas fa-clipboard-check"></i> Kết luận</h5>
+        <ul>
+            <li>Thuật toán Apriori đã phân tích thành công <strong>@ViewBag.TotalOrders đơn hàng</strong> với <strong>@ViewBag.TotalProducts sản phẩm</strong>.</li>
+            <li>Sinh ra được <strong>@ViewBag.TotalRules luật kết hợp</strong> thỏa mãn ngưỡng MinSupport và MinConfidence.</li>
+            <li>Độ tin cậy trung bình đạt <strong>@string.Format("{0:P1}", (double)ViewBag.AvgConfidence)</strong>, cho thấy mô hình có khả năng dự đoán tốt.</li>
+            <li>Kết quả được tích hợp trực tiếp vào ứng dụng web để gợi ý sản phẩm mua kèm cho khách hàng tại:
+                <ul>
+                    <li><strong>Trang Chi tiết Sản phẩm</strong>: Hiển thị "Khách hàng thường mua kèm".</li>
+                    <li><strong>Trang Giỏ hàng</strong>: Hiển thị "Gợi ý mua thêm cho bạn" (Cross-sell).</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5 class="mt-3"><i class="fas fa-lightbulb"></i> Ứng dụng thực tiễn</h5>
+        <p>
+            Việc áp dụng thuật toán Apriori giúp cửa hàng:
+        </p>
+        <ul>
+            <li><strong>Tăng doanh thu</strong> nhờ chiến lược Cross-selling tự động.</li>
+            <li><strong>Cải thiện trải nghiệm</strong> người dùng bằng gợi ý cá nhân hóa.</li>
+            <li><strong>Tối ưu hóa kho hàng</strong> dựa trên phân tích xu hướng mua sắm.</li>
+        </ul>
+    </div>
+
+    <div class="text-center mt-4 mb-4">
+        <a href="@Url.Action("Index", "DataMining")" class="btn btn-outline-dark btn-lg">
+            <i class="fas fa-arrow-left"></i> Quay lại Dashboard
+        </a>
+    </div>
+</div>

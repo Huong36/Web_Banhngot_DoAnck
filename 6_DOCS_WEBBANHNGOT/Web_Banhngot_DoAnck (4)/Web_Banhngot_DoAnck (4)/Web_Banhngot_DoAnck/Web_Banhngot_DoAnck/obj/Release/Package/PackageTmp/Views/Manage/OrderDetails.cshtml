@@ -1,0 +1,70 @@
+﻿@model Web_Banhngot_DoAnck.Models.Order
+@{
+    ViewBag.Title = "Chi Tiết Đơn Hàng #" + Model.Id;
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Thông Tin Nhận Hàng</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>Người Nhận:</dt>
+            <dd>@Model.CustomerName</dd>
+
+            <dt>Số Điện Thoại:</dt>
+            <dd>@Model.Phone</dd>
+
+            <dt>Địa Chỉ:</dt>
+            <dd>@Model.Address</dd>
+
+            <dt>Ngày Đặt:</dt>
+            <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt>Trạng Thái:</dt>
+            <dd><strong>@Model.Status</strong></dd>
+        </dl>
+    </div>
+</div>
+
+<h4 style="margin-top: 30px;">Sản Phẩm Đã Mua</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Hình Ảnh</th>
+            <th>Tên Bánh</th>
+            <th>Số Lượng</th>
+            <th>Đơn Giá</th>
+            <th>Thành Tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderDetails)
+        {
+            <tr>
+                <td>
+                    <img src="@(string.IsNullOrEmpty(item.Product.ImageUrl) ? "/Content/images/placeholder.jpg" : item.Product.ImageUrl)"
+                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
+                </td>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>@string.Format("{0:N0} VNĐ", item.Price)</td>
+                <td>@string.Format("{0:N0} VNĐ", item.Price * item.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" class="text-right"><strong>Tổng Cộng:</strong></td>
+            <td style="color: var(--accent-color); font-weight: bold; font-size: 1.2rem;">
+                @string.Format("{0:N0} VNĐ", Model.TotalAmount)
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<p>
+    @Html.ActionLink("← Quay lại danh sách đơn hàng", "Orders", null, new { @class = "btn btn-secondary" })
+</p>

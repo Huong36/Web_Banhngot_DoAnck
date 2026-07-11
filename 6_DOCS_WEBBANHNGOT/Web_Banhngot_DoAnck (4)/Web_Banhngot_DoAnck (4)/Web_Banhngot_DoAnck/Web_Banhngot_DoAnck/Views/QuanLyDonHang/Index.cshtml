@@ -1,0 +1,184 @@
+﻿@model IEnumerable<Web_Banhngot_DoAnck.Models.Order>
+@{
+    ViewBag.Title = "Quản Lý Đơn Hàng";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section styles {
+    <style>
+        .order-management-container {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+            .order-header h4 {
+                margin: 0;
+                font-weight: 600;
+            }
+
+        .btn-giao-hang {
+            background-color: #d9534f;
+            border-color: #d43f3a;
+            color: white;
+        }
+
+            .btn-giao-hang:hover {
+                color: white;
+            }
+
+        .order-list-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 10px 15px;
+            font-weight: 600;
+            color: #777;
+            background: #fff;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-card {
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .order-card-body {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 15px;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+            .order-card-body .customer-info {
+                font-weight: 500;
+            }
+
+            .order-card-body .order-id {
+                font-size: 0.85rem;
+                color: #555;
+            }
+
+        .order-total {
+            font-weight: 600;
+            color: #d9534f;
+        }
+
+        .order-status {
+            font-weight: 500;
+            color: #E67E22;
+        }
+
+        .status-cancelled {
+            color: #d9534f;
+        }
+
+        .status-completed {
+            color: #28a745;
+        }
+
+        .empty-orders-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+            min-height: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+            .empty-orders-container img {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 20px;
+            }
+
+            .empty-orders-container p {
+                font-size: 1.2rem;
+                color: #777;
+                font-weight: 500;
+            }
+    </style>
+}
+
+<div class="order-management-container">
+    <div class="order-header">
+        <h4>@Model.Count() Đơn hàng</h4>
+        <div>
+            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
+                <i class="fas fa-sort-amount-down"></i> Sắp xếp theo
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="@Url.Action("Index", new { sortOrder = "date_desc" })">Ngày Đặt: Mới nhất</a>
+                <a class="dropdown-item" href="@Url.Action("Index", new { sortOrder = "date_asc" })">Ngày Đặt: Cũ nhất</a>
+                <a class="dropdown-item" href="@Url.Action("Index", new { sortOrder = "total_desc" })">Tổng tiền: Cao nhất</a>
+            </div>
+            <a href="#" class="btn btn-giao-hang">
+                <i class="fas fa-truck"></i> Giao Hàng Loạt
+            </a>
+        </div>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="empty-orders-container">
+            <img src="https://salt.tikicdn.com/ts/upload/51/3c/05/85c8e967c1341c41271168a27d923761.png" alt="Chưa có đơn hàng" />
+            <p>Chưa có đơn hàng nào</p>
+        </div>
+    }
+    else
+    {
+        <div class="order-list-header">
+            <span>Khách hàng</span>
+            <span>Tổng cộng</span>
+            <span>Trạng thái</span>
+            <span>Ngày đặt</span>
+            <span>Thao tác</span>
+        </div>
+
+        foreach (var order in Model)
+        {
+            string statusClass = "";
+            if (order.Status == "Đã hủy") { statusClass = "status-cancelled"; }
+            if (order.Status == "Chờ xác nhận") { statusClass = "status-pending"; }
+            if (order.Status == "Hoàn thành") { statusClass = "status-completed"; }
+
+            <div class="order-card">
+                <div class="order-card-body">
+                    <div class="customer-info">
+                        @order.CustomerName
+                        <div class="order-id">Mã đơn: @order.Id</div>
+                    </div>
+                    <div class="order-total">
+                        @String.Format("{0:N0}đ", order.TotalAmount)
+                    </div>
+                    <div class="order-status @statusClass">
+                        @order.Status
+                    </div>
+                    <div>
+                        @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                    </div>
+                    <div>
+                        @Html.ActionLink("Xem Chi Tiết", "Details", "QuanLyDonHang", new { id = order.Id }, new { @class = "btn btn-sm btn-info" })
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

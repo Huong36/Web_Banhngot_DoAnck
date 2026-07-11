@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Web_Banhngot_DoAnck.Models.Order>
+@{
+    ViewBag.Title = "Đơn Hàng Của Tôi";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (Model.Count() == 0)
+{
+    <div class="alert alert-info">
+        Bạn chưa có đơn hàng nào. @Html.ActionLink("Mua sắm ngay", "Index", "Products")
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Mã ĐH</th>
+                <th>Ngày Đặt</th>
+                <th>Tổng Tiền</th>
+                <th>Trạng Thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.Id</td>
+                    <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td style="font-weight:bold; color:var(--accent-color);">
+                        @string.Format("{0:N0} VNĐ", item.TotalAmount)
+                    </td>
+                    <td>
+                        @if (item.Status == "Hoàn thành")
+                        {
+                            <span class="text-success">@item.Status</span>
+                        }
+                        else if (item.Status == "Đã hủy")
+                        {
+                            <span class="text-danger">@item.Status</span>
+                        }
+                        else
+                        {
+                            <span class="text-warning">@item.Status</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Xem Chi Tiết", "OrderDetails", new { id = item.Id }, new { @class = "btn btn-sm btn-info" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

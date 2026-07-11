@@ -1,0 +1,82 @@
+﻿@model Web_Banhngot_DoAnck.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+    .register-container {
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+        .register-container h2 {
+            text-align: center;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+        }
+
+    .btn-cta {
+        background-color: var(--accent-color);
+        color: var(--text-dark);
+        border: none;
+        padding: 10px 20px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .btn-cta:hover {
+            background-color: var(--accent-hover);
+        }
+</style>
+
+<div class="register-container">
+    <h2>Tạo Tài Khoản Mới</h2>
+
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.TenDangNhap, new { @class = "control-label" })
+            @Html.TextBoxFor(m => m.TenDangNhap, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.TenDangNhap, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.MatKhau, new { @class = "control-label" })
+            @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.MatKhau, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.XacNhanMatKhau, new { @class = "control-label" })
+            @Html.PasswordFor(m => m.XacNhanMatKhau, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.XacNhanMatKhau, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Đăng Ký" class="btn btn-cta btn-block" style="font-weight: bold; padding: 12px 0;" />
+        </div>
+    }
+
+    <hr />
+
+    <p class="text-center">
+        @Html.ActionLink("Đã có tài khoản? Đăng nhập ngay!", "Index", "DangNhap")
+    </p>
+</div>

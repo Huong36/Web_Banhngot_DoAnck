@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Chạy Web Bánh Ngọt (IIS Express)",
+            "type": "clr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "C:\\Program Files\\IIS Express\\iisexpress.exe",
+            "args": [
+                "/path:${workspaceFolder}\\Web_Banhngot_DoAnck\\Web_Banhngot_DoAnck",
+                "/port:9024"
+            ],
+            "cwd": "${workspaceFolder}",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "IIS Express is running",
+                "uriFormat": "http://localhost:9024"
+            }
+        }
+    ]
+}

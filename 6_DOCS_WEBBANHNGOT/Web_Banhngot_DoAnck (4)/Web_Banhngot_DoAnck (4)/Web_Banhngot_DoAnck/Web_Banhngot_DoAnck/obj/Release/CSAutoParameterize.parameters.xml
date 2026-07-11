@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="myCS-Web.config Connection String" description="myCS Connection String used in web.config by the application to access the database." defaultValue="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\MyDB.mdf;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\MSIIIIII\\Downloads\\web\\Web_Banhngot_DoAnck\\Web_Banhngot_DoAnck\\Web_Banhngot_DoAnck\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='myCS']/@connectionString" />
+  </parameter>
+  <parameter name="myCS_DatabasePublish-Web.config Connection String" description="myCS_DatabasePublish Connection String used in web.config by the application to access the database." defaultValue="myCS_DatabasePublish.ConnetionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\MSIIIIII\\Downloads\\web\\Web_Banhngot_DoAnck\\Web_Banhngot_DoAnck\\Web_Banhngot_DoAnck\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='myCS_DatabasePublish']/@connectionString" />
+  </parameter>
+</parameters>

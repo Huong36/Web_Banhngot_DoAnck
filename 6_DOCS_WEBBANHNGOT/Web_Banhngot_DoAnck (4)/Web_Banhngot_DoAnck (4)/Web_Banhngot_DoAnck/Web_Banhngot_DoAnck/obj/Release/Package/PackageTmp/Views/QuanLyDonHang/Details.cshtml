@@ -1,0 +1,78 @@
+﻿@model Web_Banhngot_DoAnck.Models.Order
+@{
+    ViewBag.Title = "Chi Tiết Đơn Hàng #" + Model.Id;
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Thông Tin Khách Hàng</h4>
+        <dl class="dl-horizontal">
+            <dt>Mã Đơn Hàng</dt>
+            <dd>@Model.Id</dd>
+
+            <dt>Tên Khách Hàng</dt>
+            <dd>@Model.CustomerName</dd>
+
+            <dt>Số Điện Thoại</dt>
+            <dd>@Model.Phone</dd>
+
+            <dt>Địa Chỉ Giao</dt>
+            <dd>@Model.Address</dd>
+
+            <dt>Ngày Đặt</dt>
+            <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt>Tổng Tiền</dt>
+            <dd>@string.Format("{0:N0} VNĐ", Model.TotalAmount)</dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <h4>Cập Nhật Trạng Thái</h4>
+        <dl class="dl-horizontal">
+            <dt>Trạng Thái Hiện Tại</dt>
+            <dd><strong>@Model.Status</strong></dd>
+        </dl>
+        @using (Html.BeginForm("UpdateStatus", "QuanLyDonHang", new { id = Model.Id }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="status">Đổi Trạng Thái:</label>
+                <select name="status" class="form-control" style="width: 200px; display: inline-block; margin: 0 10px;">
+                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option value="Đã xác nhận">Đã xác nhận</option>
+                    <option value="Đang giao hàng">Đang giao hàng</option>
+                    <option value="Hoàn thành">Hoàn thành</option>
+                    <option value="Đã hủy">Đã hủy</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </div>
+        }
+    </div>
+</div>
+
+<hr />
+<h4>Chi Tiết Sản Phẩm</h4>
+<table class="table">
+    <tr>
+        <th>Tên Sản Phẩm</th>
+        <th>Số Lượng</th>
+        <th>Đơn Giá</th>
+        <th>Thành Tiền</th>
+    </tr>
+    @foreach (var item in Model.OrderDetails)
+    {
+        <tr>
+            <td>@item.Product.Name</td>
+            <td>@item.Quantity</td>
+            <td>@string.Format("{0:N0} VNĐ", item.Price)</td>
+            <td>@string.Format("{0:N0} VNĐ", (item.Quantity * item.Price))</td>
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Quay lại Danh sách Đơn hàng", "Index")
+</p>

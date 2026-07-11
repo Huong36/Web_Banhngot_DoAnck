@@ -1,0 +1,261 @@
+﻿@model PagedList.IPagedList<Web_Banhngot_DoAnck.Models.Product>
+@using PagedList.Mvc
+@using PagedList
+
+@{
+    ViewBag.Title = ViewBag.Title ?? "Tất cả sản phẩm";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    var currentSort = ViewBag.CurrentSort as string;
+    var currentPriceRanges = ViewBag.CurrentPriceRanges as string[] ?? new string[0];
+}
+
+<style>
+    /* CSS Sidebar */
+    .filter-sidebar {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .filter-group h4 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--text-dark);
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent-color);
+    }
+
+    .filter-group ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .filter-group li {
+        margin-bottom: 10px;
+    }
+
+    .filter-group label {
+        margin-left: 8px;
+        cursor: pointer;
+        color: #555;
+    }
+
+    .filter-group input[type="checkbox"] {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+    }
+
+    /* CSS Pagination */
+    .pagination-container {
+        margin-top: 40px;
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .pagination {
+        display: flex;
+        padding-left: 0;
+        list-style: none;
+        border-radius: 0.25rem;
+    }
+
+    .page-item {
+        margin: 0 2px;
+    }
+
+        .page-item a, .page-item span {
+            position: relative;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: var(--text-dark);
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer; /* Thêm con trỏ tay */
+        }
+
+            .page-item a:hover {
+                z-index: 2;
+                color: var(--text-dark);
+                text-decoration: none;
+                background-color: var(--bg-main);
+                border-color: var(--accent-color);
+            }
+
+        .page-item.active a, .page-item.active span {
+            z-index: 3;
+            color: #fff;
+            background-color: var(--text-dark);
+            border-color: var(--text-dark);
+            cursor: default;
+        }
+
+        .page-item.disabled a, .page-item.disabled span {
+            color: #6c757d;
+            pointer-events: none;
+            cursor: auto;
+            background-color: #fff;
+            border-color: #dee2e6;
+        }
+
+    .btn-reset-filter {
+        width: 100%;
+        margin-bottom: 15px;
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+        .btn-reset-filter:hover {
+            background-color: #5a6268;
+            color: white;
+            text-decoration: none;
+        }
+</style>
+
+@using (Html.BeginForm("Index", "Products", FormMethod.Get, new { id = "filterForm" }))
+{
+    @Html.Hidden("categoryName", (string)ViewBag.CurrentCategory)
+    <input type="hidden" name="page" id="pageInput" value="1" />
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="filter-sidebar">
+                <a href="@Url.Action("Index", "Products")" class="btn btn-reset-filter btn-sm">
+                    <i class="fas fa-sync-alt"></i> Hiện Tất Cả / Xóa Lọc
+                </a>
+
+                <div class="filter-group">
+                    <h4>GIÁ SẢN PHẨM</h4>
+                    <ul>
+                        <li>
+                            <input type="checkbox" name="priceRange" value="0-100" id="price1" onchange="submitForm(1)"
+                                   @(currentPriceRanges.Contains("0-100") ? "checked" : "")>
+                            <label for="price1">Dưới 100,000đ</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="priceRange" value="100-300" id="price2" onchange="submitForm(1)"
+                                   @(currentPriceRanges.Contains("100-300") ? "checked" : "")>
+                            <label for="price2">100,000đ - 300,000đ</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="priceRange" value="300-500" id="price3" onchange="submitForm(1)"
+                                   @(currentPriceRanges.Contains("300-500") ? "checked" : "")>
+                            <label for="price3">300,000đ - 500,000đ</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="priceRange" value="500-1000" id="price4" onchange="submitForm(1)"
+                                   @(currentPriceRanges.Contains("500-1000") ? "checked" : "")>
+                            <label for="price4">500,000đ - 1,000,000đ</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="priceRange" value="1000+" id="price5" onchange="submitForm(1)"
+                                   @(currentPriceRanges.Contains("1000+") ? "checked" : "")>
+                            <label for="price5">Trên 1,000,000đ</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="row" style="margin-bottom: 20px; align-items: center;">
+                <div class="col-md-6">
+                    <h2 style="color: var(--text-dark); margin-bottom: 0;">@ViewBag.Title</h2>
+                </div>
+                <div class="col-md-6 text-right">
+                    <select name="sortOrder" class="form-control" style="width: auto; display: inline-block;" onchange="submitForm(1)">
+                        <option value="latest" @(currentSort == "latest" ? "selected" : "")>Mới nhất</option>
+                        <option value="price_asc" @(currentSort == "price_asc" ? "selected" : "")>Giá: Tăng dần</option>
+                        <option value="price_desc" @(currentSort == "price_desc" ? "selected" : "")>Giá: Giảm dần</option>
+                        <option value="name_asc" @(currentSort == "name_asc" ? "selected" : "")>Tên: A-Z</option>
+                        <option value="name_desc" @(currentSort == "name_desc" ? "selected" : "")>Tên: Z-A</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                @if (Model.Count > 0)
+                {
+                    foreach (var product in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            @Html.Partial("_ProductCard", product)
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center" style="padding: 50px;">
+                        <p style="font-size: 1.2rem; color: #777;">Không tìm thấy sản phẩm nào phù hợp.</p>
+                        <a href="@Url.Action("Index", "Products")" class="btn btn-primary">Xem tất cả sản phẩm</a>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="pagination-container">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                        new PagedListRenderOptions
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            UlElementClasses = new string[] { "pagination" },
+                            ContainerDivClasses = new string[] { "pagination-wrapper" },
+                            LinkToFirstPageFormat = "«",
+                            LinkToPreviousPageFormat = "‹",
+                            LinkToNextPageFormat = "›",
+                            LinkToLastPageFormat = "»",
+                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                            MaximumPageNumbersToDisplay = 5
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+        function submitForm(page) {
+            $("#pageInput").val(page);
+            $("#filterForm").submit();
+        }
+
+        $(document).ready(function () {
+            $(".pagination a").click(function (e) {
+                e.preventDefault(); //
+
+                var url = $(this).attr("href");
+                if (url && url !== "#") {
+                    var page = 1;
+                    try {
+                        var urlParams = new URLSearchParams(url.split('?')[1]);
+                        page = urlParams.get('page');
+                    } catch (err) {
+                        page = 1;
+                    }
+
+                    submitForm(page);
+                }
+            });
+        });
+    </script>
+}

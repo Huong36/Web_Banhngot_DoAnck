@@ -1,0 +1,210 @@
+﻿@model Web_Banhngot_DoAnck.Models.Order
+@{
+    ViewBag.Title = "Chi Tiết Đơn Hàng #" + Model.Id;
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section styles {
+    <style>
+        .order-detail-container {
+            padding: 20px;
+        }
+
+        .order-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+            .order-detail-header h4 {
+                margin: 0;
+                font-weight: 600;
+            }
+
+            .order-detail-header .status {
+                font-weight: 600;
+                font-size: 1.2rem;
+                color: #E67E22; /* Mặc định cho "Chờ xác nhận" */
+            }
+
+        .status-cancelled {
+            color: #d9534f;
+        }
+
+        .status-completed {
+            color: #28a745;
+        }
+
+        .detail-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .detail-card-header {
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-card-body {
+            padding: 20px;
+        }
+
+            .detail-card-body p {
+                margin-bottom: 10px;
+            }
+
+            .detail-card-body strong {
+                min-width: 120px;
+                display: inline-block;
+                color: #555;
+            }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+            .product-item img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 4px;
+                margin-right: 15px;
+            }
+
+        .product-info {
+            flex-grow: 1;
+        }
+
+            .product-info .name {
+                font-weight: 500;
+            }
+
+            .product-info .price-qty {
+                font-size: 0.9rem;
+                color: #777;
+            }
+
+        .product-total {
+            font-weight: 600;
+        }
+    </style>
+}
+
+<div class="order-detail-container">
+    <div class="order-detail-header">
+        <h4>Chi Tiết Đơn Hàng #@Model.Id</h4>
+        @{
+            string statusClass = "";
+            if (Model.Status == "Đã hủy") { statusClass = "status-cancelled"; }
+            if (Model.Status == "Chờ xác nhận") { statusClass = "status-pending"; }
+            if (Model.Status == "Hoàn thành") { statusClass = "status-completed"; }
+        }
+        <span class="status @statusClass">@Model.Status</span>
+    </div>
+
+    @* Hiển thị thông báo thành công/lỗi từ Controller (nếu có) *@
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Message"]
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            @* Khối Danh sách sản phẩm *@
+            <div class="detail-card">
+                <div class="detail-card-header">Danh sách sản phẩm</div>
+                <div class="detail-card-body" style="padding: 0 20px;">
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <div class="product-item">
+                            @* Đảm bảo Product có thuộc tính ImageUrl *@
+                            <img src="@Url.Content(item.Product.ImageUrl)" alt="@item.Product.Name" />
+                            <div class="product-info">
+                                <span class="name">@item.Product.Name</span>
+                                <span class="price-qty">@String.Format("{0:N0}đ", item.Price) x @item.Quantity</span>
+                            </div>
+                            <div class="product-total">
+                                @String.Format("{0:N0}đ", (item.Price * item.Quantity))
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="detail-card-footer" style="padding: 20px; text-align: right; border-top: 1px solid #eee;">
+                    <strong style="font-size: 1.1rem;">Tổng cộng:</strong>
+                    <span style="font-size: 1.5rem; color: #d9534f; font-weight: 600; margin-left: 10px;">
+                        @String.Format("{0:N0}đ", Model.TotalAmount)
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            @* Khối Thông tin khách hàng *@
+            <div class="detail-card">
+                <div class="detail-card-header">Thông tin khách hàng</div>
+                <div class="detail-card-body">
+                    <p><strong>Tên:</strong> @Model.CustomerName</p>
+                    <p><strong>Email:</strong> @Model.User.Email</p>
+                    <p><strong>SĐT:</strong> @Model.Phone</p>
+                    <p><strong>Địa chỉ:</strong> @Model.Address</p>
+                    <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+            </div>
+
+            @* Khối Cập nhật trạng thái (Logic Vô hiệu hóa) *@
+            <div class="detail-card">
+                <div class="detail-card-header">Cập nhật trạng thái</div>
+                <div class="detail-card-body">
+                    @{
+                        bool isFinalStatus = (Model.Status == "Đã hủy" || Model.Status == "Hoàn thành");
+                    }
+
+                    @if (isFinalStatus)
+                    {
+                        <p class="text-danger" style="font-weight: 600;">Trạng thái đã kết thúc, không thể thay đổi.</p>
+                        <div class="form-group">
+                            <select name="status" class="form-control" disabled>
+                                <option selected>@Model.Status</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-block" disabled>Đã Kết Thúc</button>
+                    }
+                    else
+                    {
+
+                        using (Html.BeginForm("UpdateStatus", "QuanLyDonHang", new { id = Model.Id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <select name="status" class="form-control">
+                                    <option value="Chờ xác nhận" @(Model.Status == "Chờ xác nhận" ? "selected" : "")>Chờ xác nhận</option>
+                                    <option value="Đang giao hàng" @(Model.Status == "Đang giao hàng" ? "selected" : "")>Đang giao hàng</option>
+                                    <option value="Hoàn thành" @(Model.Status == "Hoàn thành" ? "selected" : "")>Hoàn thành</option>
+                                    <option value="Đã hủy" @(Model.Status == "Đã hủy" ? "selected" : "")>Đã hủy</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Cập Nhật</button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

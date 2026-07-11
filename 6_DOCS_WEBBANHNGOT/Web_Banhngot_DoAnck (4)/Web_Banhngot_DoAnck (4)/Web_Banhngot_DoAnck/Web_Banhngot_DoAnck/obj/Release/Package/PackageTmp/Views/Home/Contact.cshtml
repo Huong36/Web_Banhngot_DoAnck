@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Liên Hệ";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+    .contact-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .contact-header h2 {
+            color: var(--text-dark);
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+            .contact-header h2::after {
+                content: '';
+                width: 60px;
+                height: 3px;
+                background-color: var(--accent-color);
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+    .contact-info-box {
+        background-color: #fff;
+        padding: 30px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        height: 100%;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .info-item {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background-color: var(--bg-main);
+        color: var(--text-dark);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.2rem;
+        border: 1px solid var(--accent-color);
+    }
+
+    .info-content h5 {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--text-dark);
+    }
+
+    .map-container {
+        width: 100%;
+        height: 250px;
+        background-color: #eee;
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .form-control:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 204, 0.25);
+    }
+</style>
+
+<div class="contact-header">
+    <h2>Liên Hệ Với Chúng Tôi</h2>
+    <p class="lead" style="margin-top: 15px;">Chúng tôi luôn lắng nghe ý kiến của bạn.</p>
+</div>
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success text-center">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="contact-info-box">
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="info-content">
+                    <h5>Địa Chỉ</h5>
+                    <p>123 Đường Bánh Ngọt, Quận Kem, TP. Hồ Chí Minh</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-phone"></i></div>
+                <div class="info-content">
+                    <h5>Điện Thoại</h5>
+                    <p>(028) 1234 5678</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <div class="info-content">
+                    <h5>Email</h5>
+                    <p>lienhe@sweetbaker.com</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-clock"></i></div>
+                <div class="info-content">
+                    <h5>Giờ Mở Cửa</h5>
+                    <p>Thứ 2 - Chủ Nhật: 8:00 - 22:00</p>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4946681007846!2d106.6195333148008!3d10.773374292323565!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752c2878818a6d%3A0x2d207198b6e68a0!2zSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1635000000000!5m2!1svi!2s"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="contact-info-box">
+            <h4 style="color: var(--text-dark); font-weight: bold; margin-bottom: 20px;">Gửi Tin Nhắn</h4>
+
+            @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+            {
+                <div class="form-group">
+                    <label>Họ và Tên</label>
+                    <input type="text" name="name" class="form-control" required placeholder="Nhập tên của bạn..." />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" required placeholder="Nhập email..." />
+                </div>
+
+                <div class="form-group">
+                    <label>Nội Dung</label>
+                    <textarea name="message" class="form-control" rows="5" required placeholder="Bạn muốn nhắn gửi điều gì?"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" style="background-color: var(--accent-color); border: none; color: var(--text-dark); font-weight: bold;">
+                    <i class="fas fa-paper-plane"></i> Gửi Ngay
+                </button>
+            }
+        </div>
+    </div>
+</div>

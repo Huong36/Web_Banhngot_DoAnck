@@ -1,0 +1,1354 @@
+@{
+    ViewBag.Title = "Kiểm Thử Hiệu Năng";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section styles {
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    /* ========================================
+       PERFORMANCE DASHBOARD - PREMIUM DESIGN
+       ======================================== */
+
+    :root {
+        --perf-bg-dark: #0f0e17;
+        --perf-bg-card: #1a1a2e;
+        --perf-bg-card-alt: #16213e;
+        --perf-accent-1: #e94560;
+        --perf-accent-2: #0f3460;
+        --perf-accent-3: #533483;
+        --perf-neon-green: #00f5a0;
+        --perf-neon-blue: #00d2ff;
+        --perf-neon-pink: #ff006e;
+        --perf-neon-orange: #ff8c00;
+        --perf-text-primary: #eaeaea;
+        --perf-text-muted: #8892b0;
+        --perf-border: rgba(255,255,255,0.06);
+        --perf-glass: rgba(255,255,255,0.03);
+    }
+
+    .main-container {
+        background: var(--perf-bg-dark) !important;
+        max-width: 1400px !important;
+        border-radius: 16px;
+        padding: 0 !important;
+        overflow: hidden;
+    }
+
+    .perf-dashboard {
+        font-family: 'Inter', sans-serif;
+        color: var(--perf-text-primary);
+        padding: 0;
+    }
+
+    /* ---- HEADER ---- */
+    .perf-header {
+        background: linear-gradient(135deg, #0f0e17 0%, #1a1a2e 40%, #16213e 100%);
+        padding: 40px 40px 30px;
+        border-bottom: 1px solid var(--perf-border);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .perf-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(233,69,96,0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .perf-header::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: 10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(0,210,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .perf-header h1 {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 6px;
+        background: linear-gradient(135deg, #fff 0%, var(--perf-neon-blue) 50%, var(--perf-neon-green) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        z-index: 1;
+    }
+
+    .perf-header p {
+        color: var(--perf-text-muted);
+        font-size: 14px;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .perf-header .badge-admin {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(233,69,96,0.15);
+        color: var(--perf-accent-1);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid rgba(233,69,96,0.3);
+        margin-bottom: 12px;
+    }
+
+    .badge-admin i { font-size: 10px; }
+
+    /* ---- BODY ---- */
+    .perf-body {
+        padding: 30px 40px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    /* ---- CARDS ---- */
+    .perf-card {
+        background: var(--perf-bg-card);
+        border: 1px solid var(--perf-border);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .perf-card:hover {
+        border-color: rgba(0,210,255,0.15);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .perf-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--perf-border);
+        background: var(--perf-glass);
+    }
+
+    .perf-card-header h3 {
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--perf-text-primary);
+    }
+
+    .perf-card-header h3 i {
+        font-size: 16px;
+        color: var(--perf-neon-blue);
+    }
+
+    .perf-card-body {
+        padding: 24px;
+    }
+
+    /* ---- METRICS GRID ---- */
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+    }
+
+    .metric-item {
+        background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+        border: 1px solid var(--perf-border);
+        border-radius: 12px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s, border-color 0.3s;
+    }
+
+    .metric-item:hover {
+        transform: translateY(-2px);
+        border-color: rgba(0,245,160,0.2);
+    }
+
+    .metric-item .metric-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        margin-bottom: 14px;
+    }
+
+    .metric-icon.blue { background: rgba(0,210,255,0.12); color: var(--perf-neon-blue); }
+    .metric-icon.green { background: rgba(0,245,160,0.12); color: var(--perf-neon-green); }
+    .metric-icon.pink { background: rgba(255,0,110,0.12); color: var(--perf-neon-pink); }
+    .metric-icon.orange { background: rgba(255,140,0,0.12); color: var(--perf-neon-orange); }
+
+    .metric-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--perf-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
+    }
+
+    .metric-value {
+        font-size: 24px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+    }
+
+    .metric-value .unit {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--perf-text-muted);
+        margin-left: 4px;
+    }
+
+    .metric-sub {
+        font-size: 11px;
+        color: var(--perf-text-muted);
+        margin-top: 4px;
+    }
+
+    /* STATUS DOT */
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+        position: relative;
+    }
+
+    .status-dot.online {
+        background: var(--perf-neon-green);
+        box-shadow: 0 0 8px var(--perf-neon-green);
+        animation: pulseDot 2s infinite;
+    }
+
+    .status-dot.error {
+        background: var(--perf-accent-1);
+        box-shadow: 0 0 8px var(--perf-accent-1);
+    }
+
+    @@keyframes pulseDot {
+        0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--perf-neon-green); }
+        50% { opacity: 0.5; box-shadow: 0 0 16px var(--perf-neon-green); }
+    }
+
+    /* ---- REFRESH BUTTON ---- */
+    .btn-refresh {
+        background: transparent;
+        border: 1px solid rgba(0,210,255,0.3);
+        color: var(--perf-neon-blue);
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-refresh:hover {
+        background: rgba(0,210,255,0.1);
+        border-color: var(--perf-neon-blue);
+    }
+
+    .btn-refresh.spinning i {
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* ---- AUTO REFRESH TOGGLE ---- */
+    .auto-refresh-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--perf-text-muted);
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 36px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .toggle-switch input { display: none; }
+
+    .toggle-slider {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        transition: background 0.3s;
+    }
+
+    .toggle-slider::before {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #fff;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s;
+    }
+
+    .toggle-switch input:checked ~ .toggle-slider {
+        background: var(--perf-neon-green);
+    }
+
+    .toggle-switch input:checked ~ .toggle-slider::before {
+        transform: translateX(16px);
+    }
+
+    /* ---- LOAD TEST CONFIGURATOR ---- */
+    .test-config {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .config-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .config-group label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--perf-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .config-group select,
+    .config-group input[type="number"],
+    .config-group input[type="text"] {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--perf-border);
+        border-radius: 8px;
+        color: var(--perf-text-primary);
+        padding: 10px 14px;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        transition: border-color 0.2s;
+        outline: none;
+    }
+
+    .config-group select:focus,
+    .config-group input:focus {
+        border-color: var(--perf-neon-blue);
+        box-shadow: 0 0 0 3px rgba(0,210,255,0.1);
+    }
+
+    .config-group select option {
+        background: var(--perf-bg-card);
+        color: var(--perf-text-primary);
+    }
+
+    .config-group .range-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .config-group input[type="range"] {
+        flex: 1;
+        -webkit-appearance: none;
+        height: 6px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 3px;
+        outline: none;
+    }
+
+    .config-group input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--perf-neon-blue);
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0,210,255,0.4);
+    }
+
+    .range-value {
+        background: rgba(0,210,255,0.1);
+        color: var(--perf-neon-blue);
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 700;
+        min-width: 45px;
+        text-align: center;
+    }
+
+    /* ---- ACTION BUTTONS ---- */
+    .test-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 20px;
+        border-top: 1px solid var(--perf-border);
+    }
+
+    .btn-start-test {
+        flex: 1;
+        background: linear-gradient(135deg, var(--perf-neon-green), #00b87c);
+        color: #0f0e17;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 20px rgba(0,245,160,0.25);
+    }
+
+    .btn-start-test:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 28px rgba(0,245,160,0.35);
+    }
+
+    .btn-start-test:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .btn-stop-test {
+        background: linear-gradient(135deg, var(--perf-accent-1), #c23152);
+        color: #fff;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 20px rgba(233,69,96,0.25);
+        transition: all 0.3s;
+    }
+
+    .btn-stop-test:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 28px rgba(233,69,96,0.35);
+    }
+
+    /* ---- LIVE ANALYTICS ---- */
+    .live-gauges {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .gauge-item {
+        background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+        border: 1px solid var(--perf-border);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: border-color 0.3s;
+    }
+
+    .gauge-item .gauge-value {
+        font-size: 36px;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .gauge-item .gauge-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--perf-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    .gauge-value.neon-green { color: var(--perf-neon-green); }
+    .gauge-value.neon-blue { color: var(--perf-neon-blue); }
+    .gauge-value.neon-pink { color: var(--perf-neon-pink); }
+    .gauge-value.neon-orange { color: var(--perf-neon-orange); }
+
+    /* ---- CHART ---- */
+    .chart-wrapper {
+        position: relative;
+        height: 320px;
+        background: rgba(255,255,255,0.02);
+        border-radius: 12px;
+        border: 1px solid var(--perf-border);
+        padding: 16px;
+    }
+
+    /* ---- RESULTS TABLES ---- */
+    .results-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .result-table {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--perf-border);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .result-table .table-title {
+        padding: 14px 18px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--perf-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--perf-border);
+        background: var(--perf-glass);
+    }
+
+    .result-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .result-table th {
+        padding: 10px 18px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--perf-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--perf-border);
+    }
+
+    .result-table td {
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--perf-text-primary);
+        border-bottom: 1px solid var(--perf-border);
+    }
+
+    .result-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .badge-status.success {
+        background: rgba(0,245,160,0.12);
+        color: var(--perf-neon-green);
+    }
+
+    .badge-status.error {
+        background: rgba(233,69,96,0.12);
+        color: var(--perf-accent-1);
+    }
+
+    .badge-status.warning {
+        background: rgba(255,140,0,0.12);
+        color: var(--perf-neon-orange);
+    }
+
+    /* ---- PROGRESS BAR ---- */
+    .test-progress {
+        display: none;
+        margin-top: 16px;
+    }
+
+    .progress-bar-wrapper {
+        background: rgba(255,255,255,0.06);
+        border-radius: 8px;
+        height: 8px;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--perf-neon-blue), var(--perf-neon-green));
+        border-radius: 8px;
+        transition: width 0.3s;
+    }
+
+    .progress-text {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--perf-text-muted);
+    }
+
+    /* ---- LOG BOX ---- */
+    .log-box {
+        background: #0a0a14;
+        border: 1px solid var(--perf-border);
+        border-radius: 12px;
+        padding: 16px;
+        max-height: 200px;
+        overflow-y: auto;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.8;
+        color: var(--perf-text-muted);
+    }
+
+    .log-box::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .log-box::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .log-box::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.15);
+        border-radius: 3px;
+    }
+
+    .log-entry.info { color: var(--perf-neon-blue); }
+    .log-entry.success { color: var(--perf-neon-green); }
+    .log-entry.error { color: var(--perf-accent-1); }
+    .log-entry.warn { color: var(--perf-neon-orange); }
+
+    /* ---- RESPONSIVE ---- */
+    @@media (max-width: 900px) {
+        .perf-header, .perf-body { padding: 20px; }
+        .test-config { grid-template-columns: 1fr; }
+        .live-gauges { grid-template-columns: repeat(2, 1fr); }
+        .results-grid { grid-template-columns: 1fr; }
+        .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @@media (max-width: 600px) {
+        .live-gauges { grid-template-columns: 1fr; }
+        .metrics-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ---- SECTION TWO COL ---- */
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    @@media (max-width: 900px) {
+        .two-col { grid-template-columns: 1fr; }
+    }
+</style>
+}
+
+<div class="perf-dashboard">
+    <!-- HEADER -->
+    <div class="perf-header">
+        <div class="badge-admin"><i class="fas fa-shield-alt"></i> Chỉ dành cho Quản trị viên</div>
+        <h1><i class="fas fa-tachometer-alt"></i> Bảng Điều Khiển Hiệu Năng</h1>
+        <p>Giám sát máy chủ theo thời gian thực & Kiểm thử khả năng chịu tải hệ thống</p>
+    </div>
+
+    <div class="perf-body">
+
+        <!-- ============================================ -->
+        <!-- SECTION 1: SERVER DIAGNOSTICS                -->
+        <!-- ============================================ -->
+        <div class="perf-card" id="diagnostics-card">
+            <div class="perf-card-header">
+                <h3><i class="fas fa-server"></i> Giám Sát Máy Chủ</h3>
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <div class="auto-refresh-toggle">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoRefreshToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Tự động (3s)</span>
+                    </div>
+                    <button class="btn-refresh" id="btnRefreshMetrics" onclick="refreshMetrics()">
+                        <i class="fas fa-sync-alt"></i> Làm mới
+                    </button>
+                </div>
+            </div>
+            <div class="perf-card-body">
+                <div class="metrics-grid" id="metricsGrid">
+                    <!-- OS -->
+                    <div class="metric-item">
+                        <div class="metric-icon blue"><i class="fas fa-desktop"></i></div>
+                        <div class="metric-label">Hệ điều hành</div>
+                        <div class="metric-value" style="font-size:14px;" id="metricOS">Đang tải...</div>
+                    </div>
+                    <!-- CPU -->
+                    <div class="metric-item">
+                        <div class="metric-icon green"><i class="fas fa-microchip"></i></div>
+                        <div class="metric-label">CPU Cores</div>
+                        <div class="metric-value" id="metricCPU">--</div>
+                        <div class="metric-sub">Số lõi xử lý</div>
+                    </div>
+                    <!-- RAM -->
+                    <div class="metric-item">
+                        <div class="metric-icon pink"><i class="fas fa-memory"></i></div>
+                        <div class="metric-label">Bộ nhớ (Private)</div>
+                        <div class="metric-value" id="metricRAM">--<span class="unit">MB</span></div>
+                        <div class="metric-sub" id="metricRAMSub">Working Set: --</div>
+                    </div>
+                    <!-- Threads -->
+                    <div class="metric-item">
+                        <div class="metric-icon orange"><i class="fas fa-stream"></i></div>
+                        <div class="metric-label">Luồng xử lý</div>
+                        <div class="metric-value" id="metricThreads">--</div>
+                        <div class="metric-sub">Thread count</div>
+                    </div>
+                    <!-- Uptime -->
+                    <div class="metric-item">
+                        <div class="metric-icon blue"><i class="fas fa-clock"></i></div>
+                        <div class="metric-label">Thời gian hoạt động</div>
+                        <div class="metric-value" style="font-size:16px;" id="metricUptime">--</div>
+                    </div>
+                    <!-- DB Latency -->
+                    <div class="metric-item">
+                        <div class="metric-icon green"><i class="fas fa-database"></i></div>
+                        <div class="metric-label">Độ trễ Database</div>
+                        <div class="metric-value" id="metricDB">--<span class="unit">ms</span></div>
+                        <div class="metric-sub"><span class="status-dot online" id="dbStatusDot"></span><span id="dbStatusText">Đang kiểm tra...</span></div>
+                    </div>
+                    <!-- Total Products -->
+                    <div class="metric-item">
+                        <div class="metric-icon pink"><i class="fas fa-birthday-cake"></i></div>
+                        <div class="metric-label">Tổng sản phẩm</div>
+                        <div class="metric-value" id="metricProducts">--</div>
+                    </div>
+                    <!-- Total Orders -->
+                    <div class="metric-item">
+                        <div class="metric-icon orange"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="metric-label">Tổng đơn hàng</div>
+                        <div class="metric-value" id="metricOrders">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 2: LOAD TEST CONFIGURATOR            -->
+        <!-- ============================================ -->
+        <div class="perf-card">
+            <div class="perf-card-header">
+                <h3><i class="fas fa-rocket"></i> Kiểm Thử Chịu Tải (Stress Test)</h3>
+                <span style="font-size:12px; color:var(--perf-text-muted);"><i class="fas fa-info-circle"></i> Gửi yêu cầu đồng thời từ trình duyệt</span>
+            </div>
+            <div class="perf-card-body">
+                <div class="test-config">
+                    <!-- Target URL -->
+                    <div class="config-group">
+                        <label><i class="fas fa-crosshairs"></i> Trang đích (URL)</label>
+                        <select id="targetUrl">
+                            <option value="/">🏠 Trang Chủ ( / )</option>
+                            <option value="/Products">🛒 Sản Phẩm ( /Products )</option>
+                            <option value="/Home/About">📄 Giới Thiệu ( /Home/About )</option>
+                            <option value="/Home/Contact">📞 Liên Hệ ( /Home/Contact )</option>
+                            <option value="/HieuNang/SimulateError">❌ Mô phỏng Lỗi ( 500 Internal Error )</option>
+                            <option value="/HieuNang/SimulateTimeout">⏳ Mô phỏng TimeOut ( Chờ 5 giây )</option>
+                            <option value="/PageNotFound404">❌ Mô phỏng Lỗi ( 404 Not Found )</option>
+                            <option value="custom">✏️ Nhập URL tùy chỉnh...</option>
+                        </select>
+                        <input type="text" id="customUrl" placeholder="Nhập đường dẫn... VD: /Products/Details/1" style="display:none; margin-top:8px;">
+                    </div>
+                    <!-- HTTP Method -->
+                    <div class="config-group">
+                        <label><i class="fas fa-exchange-alt"></i> Phương thức HTTP</label>
+                        <select id="httpMethod">
+                            <option value="GET">GET</option>
+                            <option value="HEAD">HEAD</option>
+                        </select>
+                    </div>
+                    <!-- Concurrency -->
+                    <div class="config-group">
+                        <label><i class="fas fa-users"></i> Số kết nối đồng thời</label>
+                        <div class="range-wrapper">
+                            <input type="range" id="concurrency" min="1" max="100000" value="100">
+                            <span class="range-value" id="concurrencyValue">100</span>
+                        </div>
+                    </div>
+                    <!-- Duration -->
+                    <div class="config-group">
+                        <label><i class="fas fa-hourglass-half"></i> Thời gian kiểm thử (giây)</label>
+                        <div class="range-wrapper">
+                            <input type="range" id="duration" min="5" max="60" value="10">
+                            <span class="range-value" id="durationValue">10s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="test-actions">
+                    <button class="btn-start-test" id="btnStartTest" onclick="startLoadTest()">
+                        <i class="fas fa-play"></i> Bắt Đầu Kiểm Thử
+                    </button>
+                    <button class="btn-stop-test" id="btnStopTest" onclick="stopLoadTest()">
+                        <i class="fas fa-stop"></i> Dừng Kiểm Thử
+                    </button>
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="test-progress" id="testProgress">
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progressPercent">0%</span>
+                        <span id="progressTime">0s / 10s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 3: LIVE ANALYTICS                    -->
+        <!-- ============================================ -->
+        <div class="perf-card" id="analyticsCard" style="display:none;">
+            <div class="perf-card-header">
+                <h3><i class="fas fa-chart-bar"></i> Chỉ Số Thời Gian Thực</h3>
+                <span style="font-size:12px; color:var(--perf-neon-green);" id="liveIndicator">
+                    <span class="status-dot online"></span> ĐANG CHẠY
+                </span>
+            </div>
+            <div class="perf-card-body">
+                <div class="live-gauges">
+                    <div class="gauge-item">
+                        <div class="gauge-value neon-blue" id="gaugeTotal">0</div>
+                        <div class="gauge-label">Tổng Request</div>
+                    </div>
+                    <div class="gauge-item">
+                        <div class="gauge-value neon-green" id="gaugeSuccess">0</div>
+                        <div class="gauge-label">Thành Công</div>
+                    </div>
+                    <div class="gauge-item">
+                        <div class="gauge-value neon-pink" id="gaugeFailed">0</div>
+                        <div class="gauge-label">Thất Bại</div>
+                    </div>
+                    <div class="gauge-item">
+                        <div class="gauge-value neon-orange" id="gaugeRPS">0</div>
+                        <div class="gauge-label">Req / Giây</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 4: REAL-TIME CHART                   -->
+        <!-- ============================================ -->
+        <div class="perf-card" id="chartCard" style="display:none;">
+            <div class="perf-card-header">
+                <h3><i class="fas fa-chart-line"></i> Biểu Đồ Hiệu Năng</h3>
+            </div>
+            <div class="perf-card-body">
+                <div class="chart-wrapper">
+                    <canvas id="perfChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 5: DETAILED RESULTS                  -->
+        <!-- ============================================ -->
+        <div class="perf-card" id="resultsCard" style="display:none;">
+            <div class="perf-card-header">
+                <h3><i class="fas fa-clipboard-list"></i> Phân Tích Kết Quả Chi Tiết</h3>
+            </div>
+            <div class="perf-card-body">
+                <div class="results-grid">
+                    <!-- Latency Percentiles -->
+                    <div class="result-table">
+                        <div class="table-title"><i class="fas fa-stopwatch"></i> Phân Vị Thời Gian Phản Hồi (ms)</div>
+                        <table>
+                            <thead>
+                                <tr><th>Phân vị</th><th>Thời gian (ms)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>P50 (Trung vị)</td><td id="resP50">--</td></tr>
+                                <tr><td>P90</td><td id="resP90">--</td></tr>
+                                <tr><td>P95</td><td id="resP95">--</td></tr>
+                                <tr><td>P99</td><td id="resP99">--</td></tr>
+                                <tr><td>Min</td><td id="resMin">--</td></tr>
+                                <tr><td>Max</td><td id="resMax">--</td></tr>
+                                <tr><td>Trung bình</td><td id="resAvg">--</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- HTTP Status Codes -->
+                    <div class="result-table">
+                        <div class="table-title"><i class="fas fa-code"></i> Phân Bố Mã HTTP</div>
+                        <table>
+                            <thead>
+                                <tr><th>Mã trạng thái</th><th>Số lượng</th><th>Trạng thái</th></tr>
+                            </thead>
+                            <tbody id="statusCodeTable">
+                                <tr><td colspan="3" style="text-align:center; color:var(--perf-text-muted);">Chưa có dữ liệu</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 6: LOG                               -->
+        <!-- ============================================ -->
+        <div class="perf-card" id="logCard" style="display:none;">
+            <div class="perf-card-header">
+                <h3><i class="fas fa-terminal"></i> Nhật Ký Kiểm Thử</h3>
+                <button class="btn-refresh" onclick="clearLog()"><i class="fas fa-eraser"></i> Xóa</button>
+            </div>
+            <div class="perf-card-body">
+                <div class="log-box" id="logBox"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+    // ==========================================
+    //  SERVER METRICS (AUTO REFRESH)
+    // ==========================================
+    var autoRefreshTimer = null;
+
+    function refreshMetrics() {
+        var btn = document.getElementById('btnRefreshMetrics');
+        btn.classList.add('spinning');
+
+        $.ajax({
+            url: '@Url.Action("GetServerMetrics", "HieuNang")',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                btn.classList.remove('spinning');
+                if (data.success) {
+                    document.getElementById('metricOS').textContent = data.os;
+                    document.getElementById('metricCPU').textContent = data.cpuCores;
+                    document.getElementById('metricRAM').innerHTML = data.memoryMB + '<span class="unit">MB</span>';
+                    document.getElementById('metricRAMSub').textContent = 'Working Set: ' + data.workingSetMB + ' MB';
+                    document.getElementById('metricThreads').textContent = data.threadCount;
+                    document.getElementById('metricUptime').textContent = data.uptime;
+                    document.getElementById('metricDB').innerHTML = data.dbLatencyMs + '<span class="unit">ms</span>';
+                    document.getElementById('metricProducts').textContent = data.totalProducts;
+                    document.getElementById('metricOrders').textContent = data.totalOrders;
+
+                    var dbDot = document.getElementById('dbStatusDot');
+                    var dbText = document.getElementById('dbStatusText');
+                    if (data.dbStatus === 'OK') {
+                        dbDot.className = 'status-dot online';
+                        dbText.textContent = 'Kết nối tốt';
+                    } else {
+                        dbDot.className = 'status-dot error';
+                        dbText.textContent = data.dbStatus;
+                    }
+                }
+            },
+            error: function () {
+                btn.classList.remove('spinning');
+            }
+        });
+    }
+
+    function startAutoRefresh() {
+        if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+        autoRefreshTimer = setInterval(refreshMetrics, 3000);
+    }
+
+    function stopAutoRefresh() {
+        if (autoRefreshTimer) {
+            clearInterval(autoRefreshTimer);
+            autoRefreshTimer = null;
+        }
+    }
+
+    document.getElementById('autoRefreshToggle').addEventListener('change', function () {
+        if (this.checked) {
+            startAutoRefresh();
+        } else {
+            stopAutoRefresh();
+        }
+    });
+
+    // Init
+    refreshMetrics();
+    startAutoRefresh();
+
+    // ==========================================
+    //  RANGE SLIDERS
+    // ==========================================
+    document.getElementById('concurrency').addEventListener('input', function () {
+        document.getElementById('concurrencyValue').textContent = this.value;
+    });
+    document.getElementById('duration').addEventListener('input', function () {
+        document.getElementById('durationValue').textContent = this.value + 's';
+    });
+    document.getElementById('targetUrl').addEventListener('change', function () {
+        var customInput = document.getElementById('customUrl');
+        customInput.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    // ==========================================
+    //  CHART.JS SETUP
+    // ==========================================
+    var perfChart = null;
+    var chartLabels = [];
+    var chartLatencyData = [];
+    var chartRPSData = [];
+
+    function initChart() {
+        var ctx = document.getElementById('perfChart').getContext('2d');
+        if (perfChart) perfChart.destroy();
+
+        chartLabels = [];
+        chartLatencyData = [];
+        chartRPSData = [];
+
+        perfChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartLabels,
+                datasets: [
+                    {
+                        label: 'Thời gian phản hồi (ms)',
+                        data: chartLatencyData,
+                        borderColor: '#00d2ff',
+                        backgroundColor: 'rgba(0,210,255,0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#00d2ff',
+                        borderWidth: 2,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Requests/s',
+                        data: chartRPSData,
+                        borderColor: '#00f5a0',
+                        backgroundColor: 'rgba(0,245,160,0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#00f5a0',
+                        borderWidth: 2,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#8892b0', font: { family: 'Inter', size: 12 } }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#8892b0', font: { size: 11 } },
+                        grid: { color: 'rgba(255,255,255,0.04)' }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Latency (ms)', color: '#00d2ff', font: { size: 12 } },
+                        ticks: { color: '#00d2ff', font: { size: 11 } },
+                        grid: { color: 'rgba(255,255,255,0.04)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: 'RPS', color: '#00f5a0', font: { size: 12 } },
+                        ticks: { color: '#00f5a0', font: { size: 11 } },
+                        grid: { drawOnChartArea: false }
+                    }
+                }
+            }
+        });
+    }
+
+    // ==========================================
+    //  LOAD TEST ENGINE
+    // ==========================================
+    var isRunning = false;
+    var testAbortController = null;
+    var allLatencies = [];
+    var statusCodes = {};
+    var totalRequests = 0;
+    var successCount = 0;
+    var failedCount = 0;
+    var secondRPS = 0;
+    var testStartTime = 0;
+    var testDuration = 0;
+    var progressTimer = null;
+
+    function getTargetUrl() {
+        var sel = document.getElementById('targetUrl');
+        if (sel.value === 'custom') {
+            return document.getElementById('customUrl').value || '/';
+        }
+        return sel.value;
+    }
+
+    function startLoadTest() {
+        if (isRunning) return;
+        isRunning = true;
+
+        var url = getTargetUrl();
+        var concurrency = parseInt(document.getElementById('concurrency').value);
+        var duration = parseInt(document.getElementById('duration').value);
+        testDuration = duration;
+
+        // Reset stats
+        allLatencies = [];
+        statusCodes = {};
+        totalRequests = 0;
+        successCount = 0;
+        failedCount = 0;
+
+        // Show/hide UI
+        document.getElementById('analyticsCard').style.display = 'block';
+        document.getElementById('chartCard').style.display = 'block';
+        document.getElementById('resultsCard').style.display = 'block';
+        document.getElementById('logCard').style.display = 'block';
+        document.getElementById('btnStartTest').style.display = 'none';
+        document.getElementById('btnStopTest').style.display = 'flex';
+        document.getElementById('testProgress').style.display = 'block';
+        document.getElementById('liveIndicator').innerHTML = '<span class="status-dot online"></span> ĐANG CHẠY';
+
+        // Reset gauges
+        updateGauges();
+        initChart();
+        clearLog();
+
+        addLog('info', '🚀 Bắt đầu kiểm thử: ' + url);
+        addLog('info', '⚡ Concurrency: ' + concurrency + ' | Duration: ' + duration + 's');
+
+        testAbortController = new AbortController();
+        testStartTime = Date.now();
+
+        // Progress timer
+        progressTimer = setInterval(function () {
+            var elapsed = (Date.now() - testStartTime) / 1000;
+            var pct = Math.min((elapsed / testDuration) * 100, 100);
+            document.getElementById('progressBarFill').style.width = pct + '%';
+            document.getElementById('progressPercent').textContent = Math.round(pct) + '%';
+            document.getElementById('progressTime').textContent = Math.round(elapsed) + 's / ' + testDuration + 's';
+        }, 200);
+
+        // Chart update timer
+        var chartTimer = setInterval(function () {
+            if (!isRunning) {
+                clearInterval(chartTimer);
+                return;
+            }
+            var elapsed = Math.round((Date.now() - testStartTime) / 1000);
+            chartLabels.push(elapsed + 's');
+
+            // Avg latency for the last second's requests
+            var avgLat = allLatencies.length > 0 ? Math.round(allLatencies.reduce(function(a, b) { return a + b; }, 0) / allLatencies.length) : 0;
+            chartLatencyData.push(avgLat);
+            chartRPSData.push(secondRPS);
+            secondRPS = 0;
+
+            if (perfChart) perfChart.update('none');
+        }, 1000);
+
+        // Launch concurrent workers
+        var workers = [];
+        for (var i = 0; i < concurrency; i++) {
+            workers.push(runWorker(url, duration, testAbortController.signal));
+        }
+
+        Promise.all(workers).then(function () {
+            finishTest();
+            clearInterval(chartTimer);
+        });
+    }
+
+    function runWorker(url, duration, signal) {
+        return new Promise(function (resolve) {
+            function sendRequest() {
+                if (!isRunning || (Date.now() - testStartTime) >= duration * 1000) {
+                    resolve();
+                    return;
+                }
+
+                var method = document.getElementById('httpMethod').value;
+                var startT = performance.now();
+
+                fetch(url, { method: method, signal: signal, cache: 'no-store' })
+                    .then(function (resp) {
+                        var latency = Math.round(performance.now() - startT);
+                        totalRequests++;
+                        allLatencies.push(latency);
+                        secondRPS++;
+
+                        var code = resp.status;
+                        statusCodes[code] = (statusCodes[code] || 0) + 1;
+
+                        if (code >= 200 && code < 400) {
+                            successCount++;
+                        } else {
+                            failedCount++;
+                        }
+
+                        updateGauges();
+                        // Continue next request
+                        sendRequest();
+                    })
+                    .catch(function (err) {
+                        if (err.name === 'AbortError') {
+                            resolve();
+                            return;
+                        }
+                        totalRequests++;
+                        failedCount++;
+                        var latency = Math.round(performance.now() - startT);
+                        allLatencies.push(latency);
+                        secondRPS++;
+                        statusCodes['ERR'] = (statusCodes['ERR'] || 0) + 1;
+                        updateGauges();
+                        sendRequest();
+                    });
+            }
+            sendRequest();
+        });
+    }
+
+    function stopLoadTest() {
+        if (!isRunning) return;
+        addLog('warn', '⛔ Kiểm thử bị dừng bởi người dùng.');
+        if (testAbortController) testAbortController.abort();
+        finishTest();
+    }
+
+    function finishTest() {
+        isRunning = false;
+        if (progressTimer) {
+            clearInterval(progressTimer);
+            progressTimer = null;
+        }
+
+        document.getElementById('progressBarFill').style.width = '100%';
+        document.getElementById('progressPercent').textContent = '100%';
+        document.getElementById('btnStartTest').style.display = 'flex';
+        document.getElementById('btnStopTest').style.display = 'none';
+        document.getElementById('liveIndicator').innerHTML = '<span style="color:var(--perf-text-muted);">✅ HOÀN THÀNH</span>';
+
+        // Calculate percentiles
+        var sorted = allLatencies.slice().sort(function (a, b) { return a - b; });
+        if (sorted.length > 0) {
+            document.getElementById('resP50').textContent = percentile(sorted, 50) + ' ms';
+            document.getElementById('resP90').textContent = percentile(sorted, 90) + ' ms';
+            document.getElementById('resP95').textContent = percentile(sorted, 95) + ' ms';
+            document.getElementById('resP99').textContent = percentile(sorted, 99) + ' ms';
+            document.getElementById('resMin').textContent = sorted[0] + ' ms';
+            document.getElementById('resMax').textContent = sorted[sorted.length - 1] + ' ms';
+            document.getElementById('resAvg').textContent = Math.round(sorted.reduce(function(a, b) { return a + b; }, 0) / sorted.length) + ' ms';
+        }
+
+        // Status codes table
+        var tbody = document.getElementById('statusCodeTable');
+        tbody.innerHTML = '';
+        var codes = Object.keys(statusCodes).sort();
+        for (var i = 0; i < codes.length; i++) {
+            var code = codes[i];
+            var count = statusCodes[code];
+            var badgeClass = 'success';
+            if (code === 'ERR' || (parseInt(code) >= 500)) badgeClass = 'error';
+            else if (parseInt(code) >= 400) badgeClass = 'warning';
+
+            var statusLabel = code === 'ERR' ? 'Network Error' : (code >= 200 && code < 300 ? 'OK' : code >= 300 && code < 400 ? 'Redirect' : code >= 400 && code < 500 ? 'Client Error' : 'Server Error');
+
+            tbody.innerHTML += '<tr><td><span class="badge-status ' + badgeClass + '">' + code + '</span></td><td>' + count + '</td><td>' + statusLabel + '</td></tr>';
+        }
+
+        var elapsedSec = Math.round((Date.now() - testStartTime) / 1000);
+        var avgRPS = elapsedSec > 0 ? Math.round(totalRequests / elapsedSec) : 0;
+        addLog('success', '✅ Hoàn thành! Tổng: ' + totalRequests + ' requests | Avg RPS: ' + avgRPS + ' | Thành công: ' + successCount + ' | Thất bại: ' + failedCount);
+    }
+
+    function updateGauges() {
+        document.getElementById('gaugeTotal').textContent = totalRequests;
+        document.getElementById('gaugeSuccess').textContent = successCount;
+        document.getElementById('gaugeFailed').textContent = failedCount;
+        var elapsed = (Date.now() - testStartTime) / 1000;
+        var rps = elapsed > 0 ? Math.round(totalRequests / elapsed) : 0;
+        document.getElementById('gaugeRPS').textContent = rps;
+    }
+
+    function percentile(sortedArr, p) {
+        var index = Math.ceil((p / 100) * sortedArr.length) - 1;
+        return sortedArr[Math.max(0, index)];
+    }
+
+    // ==========================================
+    //  LOG
+    // ==========================================
+    function addLog(type, message) {
+        var logBox = document.getElementById('logBox');
+        var now = new Date();
+        var time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0') + ':' + now.getSeconds().toString().padStart(2, '0');
+        logBox.innerHTML += '<div class="log-entry ' + type + '">[' + time + '] ' + message + '</div>';
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function clearLog() {
+        document.getElementById('logBox').innerHTML = '';
+    }
+</script>
+}
+

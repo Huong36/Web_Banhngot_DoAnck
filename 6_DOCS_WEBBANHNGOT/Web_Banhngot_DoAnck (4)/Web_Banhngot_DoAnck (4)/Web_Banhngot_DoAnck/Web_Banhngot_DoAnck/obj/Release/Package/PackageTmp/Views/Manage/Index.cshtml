@@ -1,0 +1,47 @@
+﻿@model Web_Banhngot_DoAnck.Models.EditProfileViewModel
+@{
+    ViewBag.Title = "Thông Tin Cá Nhân";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (ViewBag.StatusMessage != null)
+{
+    <div class="alert alert-success">@ViewBag.StatusMessage</div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <h4>Chỉnh sửa thông tin hồ sơ.</h4>
+            <hr />
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @readonly = "readonly" })
+                    <span class="text-muted small">Tên đăng nhập không thể thay đổi.</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Lưu Thay Đổi" class="btn btn-primary" />
+
+                    @Html.ActionLink("Đổi Mật Khẩu", "ChangePassword", null, new { @class = "btn btn-primary", style = "margin-left: 10px;" })
+                </div>
+            </div>
+        }
+    </div>
+</div>

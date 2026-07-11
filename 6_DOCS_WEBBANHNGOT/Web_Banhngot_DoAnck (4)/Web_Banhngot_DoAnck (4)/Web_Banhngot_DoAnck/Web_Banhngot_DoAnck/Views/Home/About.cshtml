@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "About";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+    .about-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .about-header h2 {
+            color: var(--text-dark);
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+            .about-header h2::after {
+                content: '';
+                width: 60px;
+                height: 3px;
+                background-color: var(--accent-color);
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+    .feature-box {
+        text-align: center;
+        padding: 30px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+    }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .feature-icon {
+        font-size: 3rem;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+    }
+
+    .feature-title {
+        font-weight: bold;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+    }
+    .team-section {
+        margin-top: 50px;
+        background-color: #fff;
+        padding: 40px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .team-member {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .member-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: var(--bg-main);
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-dark);
+        font-size: 2rem;
+        border: 2px solid var(--accent-color);
+    }
+
+    .member-name {
+        font-weight: bold;
+        color: var(--text-dark);
+        font-size: 1.1rem;
+    }
+
+    .member-role {
+        color: #777;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="about-header">
+    <h2>Câu Chuyện Của SweetBaker</h2>
+    <p class="lead" style="margin-top: 15px;">Ngọt ngào trong từng khoảnh khắc.</p>
+</div>
+
+<div class="row align-items-center" style="margin-bottom: 50px;">
+    <div class="col-md-6">
+        <img src="https://wa-magazine.com/wp-content/uploads/2023/05/cake-884x600.jpeg"
+             alt="SweetBaker Kitchen" class="img-fluid rounded shadow-sm" style="width:100%; height:auto;" />
+    </div>
+    <div class="col-md-6">
+        <h3 style="color: var(--text-dark);">Khởi nguồn đam mê</h3>
+        <p style="line-height: 1.8; text-align: justify;">
+            Được thành lập vào năm @DateTime.Now.Year, <strong>SweetBaker</strong> không chỉ là một tiệm bánh, mà là nơi chúng tôi gửi gắm tình yêu vào từng thớ bột. Chúng tôi tin rằng một chiếc bánh ngon không chỉ đến từ nguyên liệu thượng hạng mà còn từ sự tỉ mỉ và đam mê của người thợ làm bánh.
+        </p>
+        <p style="line-height: 1.8; text-align: justify;">
+            Sứ mệnh của chúng tôi là mang đến những hương vị ngọt ngào, tươi mới nhất để cùng bạn chia sẻ niềm vui trong những dịp đặc biệt, hay đơn giản là làm bừng sáng một ngày bình thường của bạn.
+        </p>
+        <div style="margin-top: 20px;">
+            @Html.ActionLink("Xem Sản Phẩm Ngay", "Index", "Products", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="feature-box">
+            <div class="feature-icon">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <h4 class="feature-title">Nguyên Liệu Tươi Sạch</h4>
+            <p>Chúng tôi cam kết sử dụng 100% nguyên liệu tự nhiên, không chất bảo quản, nhập mới mỗi ngày.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-box">
+            <div class="feature-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h4 class="feature-title">Làm Bằng Cả Trái Tim</h4>
+            <p>Mỗi chiếc bánh đều được làm thủ công tỉ mỉ bởi những người thợ lành nghề và đầy tâm huyết.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-box">
+            <div class="feature-icon">
+                <i class="fas fa-shipping-fast"></i>
+            </div>
+            <h4 class="feature-title">Giao Hàng Nhanh Chóng</h4>
+            <p>Đội ngũ giao hàng chuyên nghiệp đảm bảo bánh đến tay bạn vẫn giữ nguyên hương vị tươi ngon nhất.</p>
+        </div>
+    </div>
+</div>
+
+<div class="team-section">
+    <div class="about-header">
+        <h2>Thành Viên Nhóm</h2>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-3 col-sm-6">
+            <div class="team-member">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-name">Đặng Thành Thi</div>
+                <div class="member-role">Nhóm Trưởng</div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="team-member">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-name">Nhân</div>
+                <div class="member-role">Thành Viên</div>
+            </div>
+        </div>
+
+    </div>
+</div>

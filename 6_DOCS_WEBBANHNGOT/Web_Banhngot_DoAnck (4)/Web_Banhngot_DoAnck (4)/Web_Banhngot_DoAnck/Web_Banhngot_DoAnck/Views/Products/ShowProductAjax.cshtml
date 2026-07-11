@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Danh Sách Sản Phẩm (Ajax)";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<h2 class="text-center">Danh Sách Sản Phẩm (Tải bằng Ajax)</h2>
+
+<div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+        <button id="btnReload" class="btn btn-success mb-3">
+            <i class="fas fa-sync"></i> Tải lại danh sách
+        </button>
+
+        <table class="table table-bordered table-striped" id="tblProducts">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Hình ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Giá bán</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div id="loading" class="text-center" style="display:none;">
+            <p><i class="fas fa-spinner fa-spin fa-2x"></i> Đang tải dữ liệu...</p>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            loadProducts();
+
+            $("#btnReload").click(function () {
+                loadProducts();
+            });
+        });
+
+        function loadProducts() {
+            $("#tblProducts tbody").empty();
+            $("#loading").show(); 
+
+            $.ajax({
+                url: '/Products/GetProductListApi',
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    $("#loading").hide(); 
+
+                    if (res.status == true) {
+                        var data = res.data;
+                        var html = '';
+
+                        if (data.length == 0) {
+                            $('#tblProducts tbody').html('<tr><td colspan="5" class="text-center">Không có dữ liệu</td></tr>');
+                        } else {
+                            $.each(data, function (key, item) {
+                                var price = item.Price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+                                html += '<tr>';
+                                html += '<td>' + item.Id + '</td>';
+                                html += '<td><img src="' + item.ImageUrl + '" style="width:50px; height:50px; object-fit:cover; border-radius:4px;" /></td>';
+                                html += '<td>' + item.Name + '</td>';
+                                html += '<td><span class="badge badge-info">' + item.CategoryName + '</span></td>';
+                                html += '<td style="color:red; font-weight:bold;">' + price + '</td>';
+                                html += '</tr>';
+                            });
+                            $('#tblProducts tbody').html(html);
+                        }
+                    } else {
+                        alert("Lỗi Server: " + res.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#loading").hide();
+                    console.log(xhr.responseText); 
+                    alert("Không thể kết nối tới API. Nhấn F12 -> Console để xem chi tiết.");
+                }
+            });
+        }
+    </script>
+}

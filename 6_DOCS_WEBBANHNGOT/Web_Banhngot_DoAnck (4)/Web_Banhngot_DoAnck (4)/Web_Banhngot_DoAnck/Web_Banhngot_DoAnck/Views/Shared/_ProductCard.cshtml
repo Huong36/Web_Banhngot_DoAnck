@@ -1,0 +1,101 @@
+﻿@model Web_Banhngot_DoAnck.Models.Product
+
+    <style>
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            }
+
+        .card-img-container {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            overflow: hidden;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .product-card-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 54px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin: 10px 0;
+        }
+
+        .btn-cta {
+            background-color: var(--accent-color);
+            color: var(--text-dark);
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+            .btn-cta:hover {
+                background-color: var(--accent-hover);
+                color: var(--text-dark);
+                text-decoration: none;
+            }
+    </style>
+
+    <div class="product-card">
+        <div class="card-img-container">
+            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/Content/images/placeholder.jpg" : Model.ImageUrl)"
+                 alt="@Model.Name" class="product-card-img" />
+        </div>
+        <div class="card-body">
+            <div>
+                <h5 class="product-name">@Model.Name</h5>
+                <p class="product-price">@string.Format("{0:N0} VNĐ", Model.Price)</p>
+            </div>
+
+            @Html.ActionLink("Xem Chi Tiết", "Details", "Products", new { id = Model.Id }, new { @class = "btn btn-cta" })
+
+        </div>
+    </div>

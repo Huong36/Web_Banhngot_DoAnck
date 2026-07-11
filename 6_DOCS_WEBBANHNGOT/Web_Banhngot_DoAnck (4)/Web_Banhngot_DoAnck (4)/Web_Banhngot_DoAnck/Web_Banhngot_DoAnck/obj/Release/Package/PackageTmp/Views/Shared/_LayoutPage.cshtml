@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Tiệm Bánh Ngọt Của Tôi</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <style>
+        :root {
+            --bg-main: #FFF8E1;
+            --bg-secondary: #FFFFFF;
+            --text-dark: #4E342E;
+            --accent-color: #FFC1CC;
+            --accent-hover: #FFAFB9;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-navbar {
+            background-color: var(--text-dark);
+            padding: 10px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+            .main-navbar .navbar-brand {
+                font-size: 24px;
+                font-weight: bold;
+                color: var(--bg-main);
+            }
+
+                .main-navbar .navbar-brand:hover {
+                    color: var(--accent-color);
+                }
+
+            .main-navbar .nav-link {
+                color: var(--bg-main);
+                font-weight: bold;
+                padding: 15px 20px;
+                transition: background-color 0.3s;
+            }
+
+                .main-navbar .nav-link:hover,
+                .main-navbar .nav-item.dropdown:hover .nav-link {
+                    background-color: var(--accent-color);
+                    color: var(--text-dark);
+                }
+
+        .navbar-toggler {
+            border-color: var(--bg-main);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 248, 225, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-icon {
+            font-size: 20px;
+            color: var(--bg-main);
+            margin-right: 25px;
+            text-decoration: none;
+        }
+
+            .cart-icon:hover {
+                color: var(--accent-color);
+            }
+
+
+        .user-auth a {
+            color: var(--bg-main);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+
+            .user-auth a:hover {
+                color: var(--accent-color);
+            }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-menu-trigger {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--bg-main);
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: var(--bg-secondary);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            list-style: none;
+            padding: 10px 0;
+            margin: 5px 0 0 0;
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .user-dropdown li {
+            padding: 8px 20px;
+        }
+
+            .user-dropdown li a {
+                color: var(--text-dark);
+                text-decoration: none;
+                display: block;
+            }
+
+            .user-dropdown li:hover {
+                background-color: #f9f9f9;
+            }
+
+        .logout-link {
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+            .logout-link:hover {
+                text-decoration: none;
+                color: var(--text-dark);
+            }
+
+        .dropdown-menu {
+            background-color: var(--bg-secondary);
+        }
+
+        .dropdown-item {
+            color: var(--text-dark) !important;
+        }
+
+            .dropdown-item:hover {
+                background-color: var(--accent-color);
+            }
+
+
+        .main-container {
+            min-height: 60vh;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .footer {
+            background-color: var(--text-dark);
+            color: var(--bg-main);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 30px;
+        }
+    </style>
+
+    @RenderSection("styles", required: false)
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg main-navbar">
+        <div class="container-fluid" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+
+            @Html.ActionLink("SweetBaker", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        @Html.ActionLink("Trang Chủ", "Index", "Home", null, new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Tất Cả Sản Phẩm", "Index", "Products", null, new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Danh Mục
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            @Html.ActionLink("Bánh Sinh Nhật", "Index", "Products", new { categoryName = "Bánh Sinh Nhật" }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Bánh Cưới", "Index", "Products", new { categoryName = "Bánh Cưới" }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Bánh Ngọt", "Index", "Products", new { categoryName = "Bánh Ngọt" }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Bánh Mì", "Index", "Products", new { categoryName = "Bánh Mì" }, new { @class = "dropdown-item" })
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Giới Thiệu", "About", "Home", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Liên Hệ", "Contact", "Home", null, new { @class = "nav-link" })
+                    </li>
+                </ul>
+
+                <div class="header-right">
+                    <div class="header-right">
+                        @{ Html.RenderAction("CartSummary", "Cart"); }
+
+                        <div class="user-auth">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="user-menu">
+                                    <span class="user-menu-trigger">
+                                        <i class="fas fa-user"></i> Chào, @User.Identity.Name!
+                                    </span>
+
+                                    <ul class="user-dropdown">
+                                        @if (User.IsInRole("Admin") || User.IsInRole("NhanVien"))
+                                        {
+                                            <li>@Html.ActionLink("Thông tin cá nhân", "Index", "Manage")</li>
+                                            <li>@Html.ActionLink("Quản lý Sản Phẩm", "Index", "QuanLySanPham")</li>
+                                            <li>@Html.ActionLink("Quản lý Đơn Hàng", "Index", "QuanLyDonHang")</li>
+                                        }
+
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <li>@Html.ActionLink("Quản lý Nhân Viên", "Index", "QuanLyNhanVien")</li>
+                                        }
+
+                                        <li>@Html.ActionLink("Đơn hàng của tôi", "Orders", "Manage")</li>
+                                        <li>@Html.ActionLink("Thanh toán", "Index", "Checkout")</li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <a href="javascript:document.getElementById('logoutForm').submit()" class="logout-link">Đăng xuất</a>
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Đăng nhập", "Index", "DangNhap")
+                                @Html.ActionLink("Đăng ký", "Register", "Account")
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </nav>
+
+    <div class="main-container">
+        @RenderBody()
+    </div>
+
+    <footer class="footer">
+        <p><strong>Tiệm Bánh Ngọt Của Tôi</strong></p>
+        <p>Địa chỉ: 123 Đường Bánh, Quận Kem, TP. Hồ Chí Minh</p>
+        <p>&copy; @DateTime.Now.Year - Bản quyền thuộc về Tiệm Bánh.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $('.user-menu-trigger').click(function (e) {
+                e.stopPropagation();
+                $('.user-dropdown').toggle();
+            });
+
+            $(document).click(function () {
+                $('.user-dropdown').hide();
+            });
+
+            $('.user-dropdown').click(function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>
